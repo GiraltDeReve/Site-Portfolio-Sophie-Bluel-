@@ -15,8 +15,31 @@ fetch("http://localhost:5678/api/works")
   .then((data) => {
     works = data;
     // les données de la réponse sont affectées à la variable "works"
-    genererWorks(works);
-    // fonction "genererWorks" est appelée avec "works" comme argument
+    let userToken = JSON.parse(localStorage.getItem("user"));
+    // on récupére les informations de l'user (id et token) stockées dans le local storage
+    if (userToken == null) {
+      // dans le cas où le userToken n'est pas trouvé et qu'il n'y a pas eu de login réussi
+      console.log(userToken);
+      genererWorks(works);
+      // fonction "genererWorks" est appelée avec "works" comme argument
+    } else {
+      // le token de l'user est présent et donc login réussi
+      console.log(userToken);
+      genererWorks(works);
+      // ajout des différents éléments sur le DOM pour la page accueil admin
+      const sectionEdition = document.getElementById("button-edition");
+      const logo = document.createElement("i");
+      logo.classList.add("fa-regular", "fa-pen-to-square");
+      const text = document.createElement("p");
+      text.innerHTML = "Mode édition";
+      const button = document.createElement("button");
+      button.innerHTML = "publier les changements";
+      sectionEdition.appendChild(logo);
+      sectionEdition.appendChild(text);
+      sectionEdition.appendChild(button);
+      document.getElementById("logout-button").style.display = "flex";
+      document.getElementById("login-button").style.display = "none";
+    }
   });
 
 // ----------------------------Fonction qui génére l'HTML de la gallerie de maniére dynamique---------------------
@@ -75,4 +98,12 @@ const boutonTous = document.getElementById("all");
 boutonTous.addEventListener("click", () => {
   document.querySelector(".gallery").innerHTML = "";
   genererWorks(works);
+});
+
+// -------------------------------------------LOGOUT-------------------------------
+const boutonLogout = document.getElementById("button-logout");
+boutonLogout.addEventListener("click", () => {
+  localStorage.removeItem("user");
+  window.location.reload();
+  console.log("bien déconnecté");
 });

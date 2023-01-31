@@ -57,12 +57,34 @@ body {
 }
 header {
 	display: flex;
+	/* flex-wrap: wrap; */
 	justify-content: space-between;
 	margin: 50px 0 139px 0
 	/* ajout marge plus importante entre le main et le header */
 }
+
+/* rajout button edition */
+#button-edition  {
+display: flex;
+width: 100%;
+justify-content: center;
+background-color: black;
+}
+
+#logout-button {
+	display: none;
+}
+
+/* rajout de div séparant le header en deux */
+#header-bar {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+    align-items: center;
+}
+
 section {
-	margin: 50px 0
+	margin: 50px 0;
 }
 
 h1{
@@ -100,20 +122,23 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
-
+/* ajout style sur lien  */
 a {
 	text-decoration: none;
 	color: inherit;
 	}
+	/* ajout style sur effet gras */
 strong {
 	font-weight: 600;
 }
+
 #introduction {
 	display: flex;
 	align-items: center;
 }
+
 #introduction figure {
-	flex: 1
+	flex: 1;
 }
 #introduction img {
 	display: block;
@@ -122,7 +147,7 @@ strong {
 }
 
 #introduction article {
-	flex: 1
+	flex: 1;
 }
 #introduction h2 {
 	margin-bottom: 1em;
@@ -145,6 +170,8 @@ strong {
 	padding-left: 57px;
 	/* ajout d'une padding à gauche pour même raison */
 }
+
+
 #text {
 	/* ajout d'un id pour ajouter des paddings autour du titre du portfolio et des boutons */
 	display: block;
