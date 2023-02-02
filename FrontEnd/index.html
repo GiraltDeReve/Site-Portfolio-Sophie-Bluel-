@@ -13,9 +13,36 @@
 	<script type= "module" src="/FrontEnd/JS/index.js" defer></script>
 </head>
 <body>
+  <div id="admin-bar">
+	<i class="fa-regular fa-pen-to-square"></i>
+	<button id="button-edition">Mode édition</button>
+	<!-- <a href="#modalFirst">Mode édition</a> -->
+	<!-- autre possibilité -->
+
+<aside id="modalFirst" class="modal" aria-hidden="true" role="dialog" aria-labelledby="title-modal">
+	<!-- aria-hidden="true" permet de cacher la modale pour les personnes qui accédent au portfolio autrement que sur un navigateur -->
+	<!-- aria-labelledby="title-modal" permet d'indiquer quel est le titre de la boite de dialogue -->
+  <div id="modal-content">
+    <span id="close">&times;</span>
+    <h1 id="title-modal">Galerie Photo</h1>
+	<div id="gallerieEditee"></div>
+	<hr class="separation-bar">
+	<button id="ajout-photo">Ajouter une photo</button>
+	<p id="supp-gallery">Supprimer la gallerie</p>
+  </div>
+</aside>
+
+<!-- <aside id="modalSecond" class="modal"  aria-hidden="true">
+	<div id="modal-content">
+		<span id="close">&times;</span>
+</aside> -->
+
+<button id="buttonPublish"> publier les changements </button>
+<!-- <a href="#modalSecond">publier les changements</a> -->
+	<!-- autre possibilité -->
+	
+  </div>
 <header>
-	<div id="button-edition"></div>
-	<div id="header-bar">
 	<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
 	<nav>
 		<ul>
@@ -27,7 +54,6 @@
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
-</div>
 </header>
 <main>
 	<section id="introduction">

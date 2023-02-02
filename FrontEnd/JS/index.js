@@ -26,19 +26,12 @@ fetch("http://localhost:5678/api/works")
       // le token de l'user est présent et donc login réussi
       console.log(userToken);
       genererWorks(works);
-      // ajout des différents éléments sur le DOM pour la page accueil admin
-      const sectionEdition = document.getElementById("button-edition");
-      const logo = document.createElement("i");
-      logo.classList.add("fa-regular", "fa-pen-to-square");
-      const text = document.createElement("p");
-      text.innerHTML = "Mode édition";
-      const button = document.createElement("button");
-      button.innerHTML = "publier les changements";
-      sectionEdition.appendChild(logo);
-      sectionEdition.appendChild(text);
-      sectionEdition.appendChild(button);
+      genererWorksGallerie(works);
       document.getElementById("logout-button").style.display = "flex";
       document.getElementById("login-button").style.display = "none";
+      // pour avoir le bouton logout lorsqu'on est connecté
+      document.getElementById("admin-bar").style.display = "flex";
+      // pour que l'élément admin-bar s'affiche quand l'utilisateur est connecté
     }
   });
 
@@ -101,9 +94,49 @@ boutonTous.addEventListener("click", () => {
 });
 
 // -------------------------------------------LOGOUT-------------------------------
-const boutonLogout = document.getElementById("button-logout");
+const boutonLogout = document.getElementById("logout-button");
 boutonLogout.addEventListener("click", () => {
   localStorage.removeItem("user");
+  // pour que les données utilisateurs se vide du local stroage donc l'utilisateur est déconnecté
   window.location.reload();
-  console.log("bien déconnecté");
+  // actualisation de la page dynamique pour retourner sur une page non "admin"
 });
+
+// -------------------------------------------MODALE -------------------------------
+const modalFirst = document.getElementById("modalFirst");
+const buttonEdition = document.getElementById("button-edition");
+const closeModalFirst = document.getElementById("close");
+
+buttonEdition.onclick = function () {
+  modalFirst.style.display = "block";
+  genererWorksGallerie(works);
+};
+
+closeModalFirst.onclick = function () {
+  modalFirst.style.display = "none";
+  // pour fermer la boite de dialogue avec le bouton close
+};
+
+window.onclick = function (event) {
+  if (event.target == modalFirst) {
+    modalFirst.style.display = "none";
+    // pour fermer la boite de dialogue en cliquant sur l'élément modalFirst (toute la fenêtre modale à l'exception de l'élément modalContent)
+  }
+};
+
+function genererWorksGallerie(data) {
+  document.getElementById("gallerieEditee").innerHTML = "";
+  // on vide la gallerie de la modale
+  const gallerieEditee = document.getElementById("gallerieEditee");
+  for (let i = 0; i < data.length; i++) {
+    const project = data[i];
+    const imageElement = document.createElement("img");
+    imageElement.src = project.imageUrl;
+    imageElement.alt = project.title;
+    imageElement.crossOrigin = "";
+    const buttonEdite = document.createElement("p");
+    buttonEdite.innerHTML = "éditer";
+    gallerieEditee.appendChild(imageElement);
+    gallerieEditee.appendChild(buttonEdite);
+  }
+}
