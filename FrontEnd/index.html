@@ -23,25 +23,40 @@
 	<!-- aria-hidden="true" permet de cacher la modale pour les personnes qui accédent au portfolio autrement que sur un navigateur -->
 	<!-- aria-labelledby="title-modal" permet d'indiquer quel est le titre de la boite de dialogue -->
   <div id="modal-content">
-    <span id="close">&times;</span>
+    <span id="close-modal-first" class="close">&times;</span>
     <h1 id="title-modal">Galerie Photo</h1>
-	<div id="gallerieEditee"></div>
+	<div id="gallerieEditee">
+    </div>
 	<hr class="separation-bar">
 	<button id="ajout-photo">Ajouter une photo</button>
 	<p id="supp-gallery">Supprimer la gallerie</p>
   </div>
 </aside>
 
-<!-- <aside id="modalSecond" class="modal"  aria-hidden="true">
+<aside id="modalSecond" class="modal"  aria-hidden="true" role="dialog" aria-labelledby="title-modal">
 	<div id="modal-content">
-		<span id="close">&times;</span>
-</aside> -->
+		<span id="close-modal-second" class="close">&times;</span>
+<h1>Ajout photo</h1>
+<form id="form" action="" method="post" enctype="multipart/form-data">
+	<input type="file" id="photo" name="photo" value="+ Ajouter une photo" required>
+	<label for="titleProject">Titre</label>
+	<input type="text" id="title" name="title" value="nom" rows="1" required>
+	<label for="select">Catégorie</label>
+	<select id="category" name="category"></select>
+	<hr class="separation-bar">
+	<input id="envoi-projet" type="submit" value="Valider">
+  </form>
+</div>
+
+</aside>
 
 <button id="buttonPublish"> publier les changements </button>
 <!-- <a href="#modalSecond">publier les changements</a> -->
 	<!-- autre possibilité -->
 	
   </div>
+
+
 <header>
 	<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
 	<nav>

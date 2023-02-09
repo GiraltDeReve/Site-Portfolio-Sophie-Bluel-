@@ -1,3 +1,9 @@
+// -----------------------------------stockage info user dans local storage
+const userInfos = JSON.parse(localStorage.getItem("user"));
+// lecture infos user depuis local storage sous forme objet Json
+const token = userInfos.token;
+// Récupérer token depuis infos user de localStorage
+
 // ------------------------------------Appel FETCH de l'API---------------------
 
 let works;
@@ -15,16 +21,14 @@ fetch("http://localhost:5678/api/works")
   .then((data) => {
     works = data;
     // les données de la réponse sont affectées à la variable "works"
-    let userToken = JSON.parse(localStorage.getItem("user"));
-    // on récupére les informations de l'user (id et token) stockées dans le local storage
-    if (userToken == null) {
-      // dans le cas où le userToken n'est pas trouvé et qu'il n'y a pas eu de login réussi
-      console.log(userToken);
+    if (userInfos == null) {
+      // dans le cas où les userInfos n'est pas trouvé et qu'il n'y a pas eu de login réussi
       genererWorks(works);
       // fonction "genererWorks" est appelée avec "works" comme argument
     } else {
       // le token de l'user est présent et donc login réussi
-      console.log(userToken);
+      console.log(userInfos);
+      console.log(token);
       genererWorks(works);
       genererWorksGallerie(works);
       document.getElementById("logout-button").style.display = "flex";
@@ -102,27 +106,27 @@ boutonLogout.addEventListener("click", () => {
   // actualisation de la page dynamique pour retourner sur une page non "admin"
 });
 
-// -------------------------------------------MODALE -------------------------------
+// -------------------------------------------MODALE FIRST -------------------------------
 const modalFirst = document.getElementById("modalFirst");
 const buttonEdition = document.getElementById("button-edition");
-const closeModalFirst = document.getElementById("close");
+const closeModalFirst = document.getElementById("close-modal-first");
 
-buttonEdition.onclick = function () {
+buttonEdition.addEventListener("click", () => {
   modalFirst.style.display = "block";
   genererWorksGallerie(works);
-};
+});
 
-closeModalFirst.onclick = function () {
+closeModalFirst.addEventListener("click", () => {
   modalFirst.style.display = "none";
   // pour fermer la boite de dialogue avec le bouton close
-};
+});
 
-window.onclick = function (event) {
+window.addEventListener("click", (event) => {
   if (event.target == modalFirst) {
     modalFirst.style.display = "none";
     // pour fermer la boite de dialogue en cliquant sur l'élément modalFirst (toute la fenêtre modale à l'exception de l'élément modalContent)
   }
-};
+});
 
 function genererWorksGallerie(data) {
   document.getElementById("gallerieEditee").innerHTML = "";
@@ -130,13 +134,184 @@ function genererWorksGallerie(data) {
   const gallerieEditee = document.getElementById("gallerieEditee");
   for (let i = 0; i < data.length; i++) {
     const project = data[i];
+    const sectionImageEditee = document.createElement("div");
+    sectionImageEditee.id = "sectionImageEditee";
     const imageElement = document.createElement("img");
     imageElement.src = project.imageUrl;
     imageElement.alt = project.title;
     imageElement.crossOrigin = "";
     const buttonEdite = document.createElement("p");
     buttonEdite.innerHTML = "éditer";
-    gallerieEditee.appendChild(imageElement);
-    gallerieEditee.appendChild(buttonEdite);
+    const iconModalMove = document.createElement("i");
+    iconModalMove.classList.add(
+      "icon-modal",
+      "fa-solid",
+      "fa-arrows-up-down-left-right"
+    );
+    iconModalMove.id = "iconModalMove";
+    const iconModalSupp = document.createElement("i");
+    iconModalSupp.classList.add("icon-modal", "fa-regular", "fa-trash-can");
+    iconModalSupp.id = "iconModalSupp";
+
+    gallerieEditee.appendChild(sectionImageEditee);
+    sectionImageEditee.appendChild(imageElement);
+    sectionImageEditee.appendChild(buttonEdite);
+    sectionImageEditee.appendChild(iconModalMove);
+    sectionImageEditee.appendChild(iconModalSupp);
+
+    // -------------------------------------- Supprimer un projet ------------
+
+    // on récupére l'image via le click sur la poubelle qui est dans le même container que l'image
+    iconModalSupp.addEventListener("click", function () {
+      const index = Array.from(
+        this.parentElement.parentElement.children
+      ).indexOf(this.parentElement);
+      const project = data[index];
+
+      console.log(project.id);
+      console.log(localStorage.getItem("user"));
+
+      if (window.confirm("Êtes-vous sûr de vouloir supprimer ce projet?")) {
+        fetch(`http://localhost:5678/api/works/${project.id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              console.log("Project deleted successfully");
+            } else {
+              console.error("Failed to delete project");
+            }
+          })
+          .catch((error) => console.error(error));
+      }
+    });
   }
 }
+
+// -------------------------------------------MODALE SECOND -------------------------------
+
+const modalSecond = document.getElementById("modalSecond");
+const buttonAjoutPhoto = document.getElementById("ajout-photo");
+const closeModalSecond = document.getElementById("close-modal-second");
+
+buttonAjoutPhoto.addEventListener("click", () => {
+  modalSecond.style.display = "block";
+  genererWorksGallerie(works);
+});
+
+closeModalSecond.addEventListener("click", () => {
+  modalSecond.style.display = "none";
+  // pour fermer la boite de dialogue avec le bouton close
+});
+
+window.addEventListener("click", (event) => {
+  if (event.target == modalSecond) {
+    modalSecond.style.display = "none";
+    // pour fermer la boite de dialogue en cliquant sur l'élément modalSecond(toute la fenêtre modale à l'exception de l'élément modalContent)
+  }
+});
+
+// fetch catégorie pour liste déroulante modalSecond
+let categories;
+fetch("http://localhost:5678/api/categories")
+  .then((res) => {
+    if (res.ok) {
+      return res.json();
+      // convertit les données de la reponse en format json
+    } else {
+      console.log("ERREUR");
+      // si réponse pas ok, message d'erreur dans la console
+    }
+  })
+  .then((data) => {
+    categories = data;
+    console.log(categories);
+    // création de la liste déroulante :
+    const formListDeroulante = document.getElementById("category");
+    for (let i = 0; i < categories.length; i++) {
+      const option = document.createElement("option");
+      option.value = categories[i].id;
+      option.text = categories[i].name;
+      formListDeroulante.appendChild(option);
+      console.log(option);
+    }
+  });
+
+// ----------------------------requête post pour envoyer formulaire
+// form.addEventListener("submit", function (event) {
+//   event.preventDefault();
+//   const form = document.getElementById("form");
+//   const photo = document.getElementById("photo").files[0];
+//   const title = document.getElementById("title");
+//   const category = document.getElementById("category");
+
+//   const formData = new FormData();
+//   formData.append("photo", photo);
+//   formData.append("title", title.value);
+//   formData.append("category", category.value);
+//   fetch("http://localhost:5678/api/works", {
+//     method: "POST",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//       Accept: "application/json ",
+//       "Content-Type": "multipart/form-data",
+//     },
+//     body: formData,
+//   })
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log(data);
+//       console.log("Données du formulaire envoyées avec succès", data);
+//     })
+//     .catch((error) => {
+//       console.log(photo.name);
+//       console.log(title.value);
+//       console.log(category.value);
+
+//       console.log("Erreur lors de l'envoi du formulaire", error);
+//     });
+// });
+// --------------------------------------------------------------
+
+const form = document.getElementById("form");
+
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+  if (photo.value === "" || titleProject.value === "" || select.value === "") {
+    alert("Tous les champs sont obligatoires !");
+    return;
+  }
+  const photo = document.getElementById("photo");
+  const title = document.getElementById("title");
+  const category = document.getElementById("category");
+
+  const formData = new FormData(form);
+  formData.append("photo", photo.files[0]);
+  formData.append("title", title.value);
+  formData.append("category", category.value);
+  console.log(form);
+  console.log(formData);
+  console.log(photo.files[0], title.value, category.value);
+
+  fetch("http://localhost:5678/api/works", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+      "Content-Type": "multipart/form-data",
+    },
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Données du formulaire envoyées avec succès", data);
+    })
+    .catch((error) => {
+      console.error("Erreur lors de l'envoi du formulaire", error);
+    });
+});

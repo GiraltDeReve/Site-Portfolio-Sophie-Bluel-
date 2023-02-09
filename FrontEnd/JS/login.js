@@ -31,10 +31,10 @@ document
 
     // traite la réponse de l'API pour savoir si connexion réussie ou non
     if (response.ok) {
-      const user = await response.json();
-      console.log(user);
+      const userInfos = await response.json();
+      console.log(userInfos);
       // stock dans le local storage les informations d'identification de l'utilisateur (idUser et token de la session)
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(userInfos));
       // redirige l'utilisateur vers la page d'accueil
       window.location.href = "./index.html";
     } else {
