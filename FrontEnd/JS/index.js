@@ -1,8 +1,6 @@
-// -----------------------------------stockage info user dans local storage
-const userInfos = JSON.parse(localStorage.getItem("user"));
+// ----------------------------------- info user dans session storage
+const userInfos = JSON.parse(sessionStorage.getItem("user"));
 // lecture infos user depuis local storage sous forme objet Json
-const token = userInfos.token;
-// Récupérer token depuis infos user de localStorage
 
 // ------------------------------------Appel FETCH de l'API---------------------
 
@@ -39,6 +37,8 @@ fetch("http://localhost:5678/api/works")
     }
   });
 
+const token = userInfos.token;
+// Récupérer token depuis infos user de localStorage
 // ----------------------------Fonction qui génére l'HTML de la gallerie de maniére dynamique---------------------
 function genererWorks(data) {
   // prend en entrée un tableau "data"
@@ -65,7 +65,7 @@ function genererWorks(data) {
   console.log(data);
 }
 
-// -------------------------------------------Fonction pour filtrer la gallerie de maniére dynamique---------------------
+// ------------------------------Fonction pour filtrer la gallerie de maniére dynamique---------------------
 
 function filterWorks(categoryId) {
   // fonction de filtrage qui prend en paramétre un id de catégorie
@@ -100,7 +100,7 @@ boutonTous.addEventListener("click", () => {
 // -------------------------------------------LOGOUT-------------------------------
 const boutonLogout = document.getElementById("logout-button");
 boutonLogout.addEventListener("click", () => {
-  localStorage.removeItem("user");
+  sessionStorage.removeItem("user");
   // pour que les données utilisateurs se vide du local stroage donc l'utilisateur est déconnecté
   window.location.reload();
   // actualisation de la page dynamique pour retourner sur une page non "admin"
@@ -169,7 +169,7 @@ function genererWorksGallerie(data) {
       const project = data[index];
 
       console.log(project.id);
-      console.log(localStorage.getItem("user"));
+      console.log(sessionStorage.getItem("user"));
 
       if (window.confirm("Êtes-vous sûr de vouloir supprimer ce projet?")) {
         fetch(`http://localhost:5678/api/works/${project.id}`, {
@@ -243,67 +243,26 @@ fetch("http://localhost:5678/api/categories")
   });
 
 // ----------------------------requête post pour envoyer formulaire
-// form.addEventListener("submit", function (event) {
-//   event.preventDefault();
-//   const form = document.getElementById("form");
-//   const photo = document.getElementById("photo").files[0];
-//   const title = document.getElementById("title");
-//   const category = document.getElementById("category");
-
-//   const formData = new FormData();
-//   formData.append("photo", photo);
-//   formData.append("title", title.value);
-//   formData.append("category", category.value);
-//   fetch("http://localhost:5678/api/works", {
-//     method: "POST",
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//       Accept: "application/json ",
-//       "Content-Type": "multipart/form-data",
-//     },
-//     body: formData,
-//   })
-//     .then((response) => response.json())
-//     .then((data) => {
-//       console.log(data);
-//       console.log("Données du formulaire envoyées avec succès", data);
-//     })
-//     .catch((error) => {
-//       console.log(photo.name);
-//       console.log(title.value);
-//       console.log(category.value);
-
-//       console.log("Erreur lors de l'envoi du formulaire", error);
-//     });
-// });
-// --------------------------------------------------------------
-
 const form = document.getElementById("form");
 
 form.addEventListener("submit", function (event) {
   event.preventDefault();
-  if (photo.value === "" || titleProject.value === "" || select.value === "") {
-    alert("Tous les champs sont obligatoires !");
-    return;
-  }
-  const photo = document.getElementById("photo");
+
+  const image = document.getElementById("image").files[0];
   const title = document.getElementById("title");
   const category = document.getElementById("category");
 
-  const formData = new FormData(form);
-  formData.append("photo", photo.files[0]);
+  const formData = new FormData();
+  formData.append("image", image, image.name);
   formData.append("title", title.value);
   formData.append("category", category.value);
-  console.log(form);
-  console.log(formData);
-  console.log(photo.files[0], title.value, category.value);
+
+  console.log(Array.from(formData));
 
   fetch("http://localhost:5678/api/works", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
-      Accept: "application/json",
-      "Content-Type": "multipart/form-data",
     },
     body: formData,
   })
