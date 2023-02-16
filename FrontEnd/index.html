@@ -14,8 +14,8 @@
 </head>
 <body>
   <div id="admin-bar">
-	<i class="fa-regular fa-pen-to-square"></i>
-	<button id="button-edition">Mode édition</button>
+	<i id="icon-admin-bar" class="fa-regular fa-pen-to-square fa-xl"></i>
+	<p id="button-edition">Mode édition</p>
 	<!-- <a href="#modalFirst">Mode édition</a> -->
 	<!-- autre possibilité -->
 
@@ -24,11 +24,13 @@
 	<!-- aria-labelledby="title-modal" permet d'indiquer quel est le titre de la boite de dialogue -->
   <div id="modal-content">
     <span id="close-modal-first" class="close">&times;</span>
-    <h1 id="title-modal">Galerie Photo</h1>
+    <h2 class="title-modal">Galerie Photo</h2>
 	<div id="gallerieEditee">
     </div>
 	<hr class="separation-bar">
+	<div id="div-ajout-photo">
 	<button id="ajout-photo">Ajouter une photo</button>
+</div>
 	<p id="supp-gallery">Supprimer la gallerie</p>
   </div>
 </aside>
@@ -36,18 +38,25 @@
 <aside id="modalSecond" class="modal"  aria-hidden="true" role="dialog" aria-labelledby="title-modal">
 	<div id="modal-content">
 		<span id="close-modal-second" class="close">&times;</span>
-<h1>Ajout photo</h1>
+<h2 class="title-modal">Ajout photo</h2>
 <form id="form" action="" method="post" enctype="multipart/form-data">
-	<input type="file" id="image" name="image" value="+ Ajouter une photo" required>
+	<div id="inputFile">
+	<i id="iconInputImage" class="fa-regular fa-image fa-2xl"></i>
+	<button id="buttonImage">+ Ajouter une photo</button>
+	<input type="file" id="image" name="image" value="" accept ="image/jpeg, image/png" size="4000000"required>
+	<image id="apperçu" src="#" alt="Aperçu de l'image selectionnée"></image>
+	<p id="textInputImage">jpg, png : 4mo max</p>
+</div>
+<div id="inputTitleCategory">
 	<label for="titleProject">Titre</label>
-	<input type="text" id="title" name="title" value="nom" rows="1" required>
+	<input type="text" id="title" name="title" rows="1" required>
 	<label for="select">Catégorie</label>
 	<select id="category" name="category"></select>
-	<hr class="separation-bar">
+</div>
+<hr class="separation-bar">
 	<input id="envoi-projet" type="submit" value="Valider">
   </form>
 </div>
-
 </aside>
 
 <button id="buttonPublish"> publier les changements </button>
@@ -58,7 +67,7 @@
 
 
 <header>
-	<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
+	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
 			<li>projets</li>
