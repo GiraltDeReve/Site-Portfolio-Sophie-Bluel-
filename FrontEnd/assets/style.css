@@ -76,6 +76,7 @@ top: 0;
 #icon-admin-bar {
 	display: flex;
 	align-items: center;
+	cursor: pointer;
 }
 #button-edition {
 color: white;
@@ -99,6 +100,10 @@ padding: 0 23px;
 	display: none;
 }
 #logout-button:hover {
+	cursor: pointer;
+}
+
+.button:hover {
 	cursor: pointer;
 }
 
@@ -365,6 +370,7 @@ footer nav ul {
     top: 5%;
     left: 45%;
     border-radius: 15%;
+	cursor: pointer;
   }
 
   #iconModalSupp  {
@@ -375,6 +381,7 @@ footer nav ul {
     top: 5%;
     left: 70%;
     border-radius: 15%;
+	cursor: pointer;
   }
 
   i{
@@ -444,22 +451,56 @@ justify-content: center;
 	position: absolute;
     height: 170px;
 }
+/* ------ */
 
-  #image {
-	position :absolute;
-	opacity: 0;
-	box-shadow: none;
-  }
+.input-file {
+	display: none;
+}
 
-#buttonImage{
+#buttonImage {
 	border: none;
 	background-color: rgba(203, 214, 220, 1);
 	color: rgba(48, 102, 133, 1);
 	display: flex;
-margin-top: 30px;
+	margin-top: 30px;
 	justify-content: center;
 	align-items: center;
+	z-index: 1;
+	cursor: pointer;
+	text-align: center;
+	height: 37px;
+	border-radius: 25px;
+	padding: 0 20px 0 20px;
 }
+
+
+#buttonImage:hover {
+	background-color: rgba(163, 180, 186, 1);
+	color: rgba(255, 255, 255, 1);
+}
+
+/* ------ */
+  #image {
+	position :absolute;
+	opacity: 0;
+	box-shadow: none;
+	width: 200px;
+	height: 37px;
+    padding: 0;
+    margin-top: 20px;
+  }
+
+
+/* #buttonImage{
+	border: none;
+	background-color: rgba(203, 214, 220, 1);
+	color: rgba(48, 102, 133, 1);
+	display: flex;
+    margin-top: 30px;
+	justify-content: center;
+	align-items: center;
+} */
+
 #iconInputImage {
 	padding: 10px;
     font-size: 4em;

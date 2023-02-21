@@ -142,6 +142,7 @@ function genererWorksGallerie(data) {
     const buttonEdite = document.createElement("p");
     buttonEdite.innerHTML = "éditer";
     buttonEdite.id = "buttonEdite";
+    buttonEdite.classList.add("button");
     const iconModalMove = document.createElement("i");
     iconModalMove.classList.add(
       "icon-modal",
@@ -170,7 +171,7 @@ function genererWorksGallerie(data) {
         this.parentElement.parentElement.children
       );
       // on récupère et convertit en un tableau JavaScript les enfants de gallerieEditées :
-      // iconModalSupp cliquée   .sectionImagEditee de l'icon cliquée     .gallerieEditee    .TOUTES les sectionImageEditees
+      // iconModalSupp cliquée   .sectionImageEditee de l'icon cliquée     .gallerieEditee    .TOUTES les sectionImageEditees
       // this                    .parentElement                           . parentElement    .children
       const projectIndex = projectListItems.indexOf(this.parentElement);
       // dans la liste projectListItems, on récupére le numéro(index) d'emplacement dans la liste du projet à supprimer grâce à la méthode indexOf qui a comme argument l'élément "sectionImageEditee"
@@ -201,6 +202,7 @@ function genererWorksGallerie(data) {
             console.log("Projet supprimé avec succès");
             // Supprimer le projet de la liste des projets
             // retourne un nouveau tableau works sans l'élément correspondant à l'id de project. tableau stocké dans la variable works
+            // filtre tous les éléments du tableau works qui ont un id.work différent de l'id.projet
             works = works.filter((work) => work.id !== project.id);
             // Mettre à jour la page avec les nouvelles données
             genererWorks(works);
@@ -320,6 +322,12 @@ form.addEventListener("submit", async function (event) {
   const image = document.getElementById("image").files[0];
   const title = document.getElementById("title");
   const category = document.getElementById("category");
+
+  // Vérifier si tous les champs requis sont remplis
+  if (title.value.length < 1) {
+    alert("Veuillez donner un titre au nouveau projet !");
+    return;
+  }
 
   // on créer un objet formData auquel on ajoute les valeurs ci-dessous récupérées dans form
   const formData = new FormData();

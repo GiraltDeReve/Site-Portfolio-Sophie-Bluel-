@@ -15,9 +15,8 @@
 <body>
   <div id="admin-bar">
 	<i id="icon-admin-bar" class="fa-regular fa-pen-to-square fa-xl"></i>
-	<p id="button-edition">Mode édition</p>
-	<!-- <a href="#modalFirst">Mode édition</a> -->
-	<!-- autre possibilité -->
+	<p class="button" id="button-edition">Mode édition</p>
+
 
 <aside id="modalFirst" class="modal" aria-hidden="true" role="dialog" aria-labelledby="title-modal">
 	<!-- aria-hidden="true" permet de cacher la modale pour les personnes qui accédent au portfolio autrement que sur un navigateur -->
@@ -29,9 +28,9 @@
     </div>
 	<hr class="separation-bar">
 	<div id="div-ajout-photo">
-	<button id="ajout-photo">Ajouter une photo</button>
+	<button class="button" id="ajout-photo">Ajouter une photo</button>
 </div>
-	<p id="supp-gallery">Supprimer la gallerie</p>
+	<p class="button" id="supp-gallery">Supprimer la gallerie</p>
   </div>
 </aside>
 
@@ -42,8 +41,10 @@
 <form id="form" action="" method="post" enctype="multipart/form-data">
 	<div id="inputFile">
 	<i id="iconInputImage" class="fa-regular fa-image fa-2xl"></i>
-	<button id="buttonImage">+ Ajouter une photo</button>
-	<input type="file" id="image" name="image" value="" accept ="image/jpeg, image/png" size="4000000"required>
+	<!-- <input  type="file" id="image" name="image" value="" accept ="image/jpeg, image/png" size="4000000"required>
+	<button id="buttonImage">+ Ajouter une photo</button> -->
+	<input class="input-file" type="file" id="image" name="image" accept="image/jpeg, image/png" size="4000000" required>
+		<label for="image" class="button" id="buttonImage">+ Ajouter une photo</label>
 	<image id="apperçu" src="#" alt="Aperçu de l'image selectionnée"></image>
 	<p id="textInputImage">jpg, png : 4mo max</p>
 </div>
@@ -54,15 +55,12 @@
 	<select id="category" name="category"></select>
 </div>
 <hr class="separation-bar">
-	<input id="envoi-projet" type="submit" value="Valider">
+	<input class="button"id="envoi-projet" type="submit" value="Valider">
   </form>
 </div>
 </aside>
 
-<button id="buttonPublish"> publier les changements </button>
-<!-- <a href="#modalSecond">publier les changements</a> -->
-	<!-- autre possibilité -->
-	
+<button class="button" id="buttonPublish"> publier les changements </button>
   </div>
 
 
@@ -70,12 +68,12 @@
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
-			<li>projets</li>
-			<li>contact</li>
+			<li class="button"> <a href="#portfolio">projets</a></li>
+			<li class="button"> <a href="#contact">contact</a></li>
 			<li id="logout-button">logout</li>
 			<li id="login-button"> <a href="./login.html"> login </a></li>
 			<!--  A RETIRER SUR PAGE ACCUEIL NON ADMIN -->
-			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
+			<li class="button" ><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
 </header>
@@ -96,10 +94,10 @@
 		<h2>Mes Projets</h2>
 		<!-- Ajouts des boutons -->
 		<span id = buttons>
-			<button id="all"> Tous </button>
-			<button id="objects"> Objets </button>
-			<button id="appartments"> Appartements </button>
-			<button id="hotels-restaurants"> Hôtels et restaurants </button>
+			<button class="button" id="all"> Tous </button>
+			<button class="button" id="objects"> Objets </button>
+			<button class="button" id="appartments"> Appartements </button>
+			<button class="button" id="hotels-restaurants"> Hôtels et restaurants </button>
 		</span>
 	</span>
 		<div class="gallery">
@@ -159,7 +157,7 @@
 			<input type="email" name="email" id="email" required>
 			<label for="message">Message</label>
 			<textarea name="message" id="message" cols="30" rows="10" required></textarea>
-			<input type="submit" value="Envoyer">
+			<input class="button" type="submit" value="Envoyer">
 		</form>
 	</section>
 </main>
