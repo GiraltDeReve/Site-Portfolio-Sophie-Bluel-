@@ -4,7 +4,7 @@ const userInfos = JSON.parse(sessionStorage.getItem("user"));
 
 // ------------------------------------Appel FETCH de l'API---------------------
 
-let works;
+let works = [];
 let token;
 try {
   const res = await fetch("http://localhost:5678/api/works");
@@ -37,13 +37,13 @@ try {
 }
 
 // ----------------------------Fonction qui génére l'HTML de la gallerie de maniére dynamique---------------------
-function genererWorks(works) {
+function genererWorks(data) {
   // Vide le contenu de la section gallerie pour afficher la "nouvelle" gallerie selon filter
   document.querySelector(".gallery").innerHTML = "";
-  // prend en entrée le tableau "works"
-  for (let i = 0; i < works.length; i++) {
+  // prend en entrée le tableau "data"
+  for (let i = 0; i < data.length; i++) {
     // parcourt ce tableau avec boucle "for" pour créer le contenu de gallery
-    const project = works[i];
+    const project = data[i];
     // pour recupérer l'élements du DOM qui va acceuillir TOUT les travaux
     const sectionFigure = document.querySelector(".gallery");
     // création de la balise dédié à un projet
@@ -61,7 +61,7 @@ function genererWorks(works) {
     workElement.appendChild(imageElement);
     workElement.appendChild(titleElement);
   }
-  console.log(works);
+  console.log(data);
 }
 
 // ------------------------------Fonction pour filtrer la gallerie de maniére dynamique---------------------
@@ -111,6 +111,7 @@ const closeModalFirst = document.getElementById("close-modal-first");
 buttonEdition.addEventListener("click", () => {
   modalFirst.style.display = "block";
   genererWorksGallerie(works);
+  console.log(works);
 });
 // pour faire apparaitre la boite de dialogue à l'évenemnt du click sur bouton
 
@@ -126,12 +127,12 @@ window.addEventListener("click", (event) => {
   }
 });
 
-function genererWorksGallerie(works) {
+function genererWorksGallerie(data) {
   document.getElementById("gallerieEditee").innerHTML = "";
   // on vide la gallerie de la modale
   const gallerieEditee = document.getElementById("gallerieEditee");
-  for (let i = 0; i < works.length; i++) {
-    const project = works[i];
+  for (let i = 0; i < data.length; i++) {
+    const project = data[i];
     const sectionImageEditee = document.createElement("div");
     sectionImageEditee.id = "sectionImageEditee";
     const imageElement = document.createElement("img");
@@ -175,8 +176,8 @@ function genererWorksGallerie(works) {
       // this                    .parentElement                           . parentElement    .children
       const projectIndex = projectListItems.indexOf(this.parentElement);
       // dans la liste projectListItems, on récupére le numéro(index) d'emplacement dans la liste du projet à supprimer grâce à la méthode indexOf qui a comme argument l'élément "sectionImageEditee"
-      const project = works[projectIndex];
-      // on utilise cet index pour récupérer le projet de l'architecte correspondant dans le tableau works (data) de l'api
+      const project = data[projectIndex];
+      // on utilise cet index pour récupérer le projet de l'architecte correspondant dans le tableau data de l'api
       console.log(project);
       console.log(projectIndex);
       console.log(projectListItems);
@@ -207,6 +208,7 @@ function genererWorksGallerie(works) {
             // Mettre à jour la page avec les nouvelles données
             genererWorks(works);
             genererWorksGallerie(works);
+            console.log(works);
           } else {
             console.error("Echec de la suppression du projet sélectionné");
           }
@@ -358,6 +360,7 @@ form.addEventListener("submit", async function (event) {
       // Mettre à jour la page avec les nouvelles données
       genererWorks(works);
       genererWorksGallerie(works);
+      console.log(works);
       // on fait "disparaitre" la seconde modal et apparaitre la premiére
       modalSecond.style.display = "none";
       modalFirst.style.display = "block";
