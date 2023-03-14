@@ -7,13 +7,19 @@ form.addEventListener("submit", async (event) => {
   // l'événement par defaut de la soumission du formulaire est empéchée
   event.preventDefault();
 
-  // collect des données du formulaire en utilisant l'objet "FormData" et en y associant l'email et password (append)
-  const formData = new FormData();
-  const email = document.getElementById("email");
-  const password = document.getElementById("password");
-  formData.append("email", email.value);
-  formData.append("password", password.value);
+  // récupération des données du formulaire
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
+  if (password !== "S0phie") {
+    alert("Mot de passe incorrect.");
+    return;
+  }
+
+  if (email !== "sophie.bluel@test.tld") {
+    alert("E-mail incorrect.");
+    return;
+  }
   // envoi une requête HTTP POST à l'API de connexion avec les informations d'authentification de l'architecte
   const response = await fetch("http://localhost:5678/api/users/login", {
     method: "POST",
@@ -23,8 +29,8 @@ form.addEventListener("submit", async (event) => {
     },
     //   Ici le body qu'on envoi avec l'objet qui est convertit en json
     body: JSON.stringify({
-      email: "sophie.bluel@test.tld",
-      password: "S0phie",
+      email,
+      password,
     }),
   });
 
