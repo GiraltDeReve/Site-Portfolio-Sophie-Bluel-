@@ -40,9 +40,8 @@ try {
 function genererWorks(data) {
   // Vide le contenu de la section gallerie pour afficher la "nouvelle" gallerie selon filter
   document.querySelector(".gallery").innerHTML = "";
-  // prend en entrée le tableau "data"
   for (let i = 0; i < data.length; i++) {
-    // parcourt ce tableau avec boucle "for" pour créer le contenu de gallery
+    // parcourt le tableau de données avec boucle "for" pour créer le contenu de gallery
     const project = data[i];
     // pour recupérer l'élements du DOM qui va acceuillir TOUT les travaux
     const sectionFigure = document.querySelector(".gallery");
@@ -65,15 +64,22 @@ function genererWorks(data) {
 }
 
 // ------------------------------Fonction pour filtrer la gallerie de maniére dynamique---------------------
-
 function filterWorks(categoryId) {
   // fonction de filtrage qui prend en paramétre un id de catégorie
-  const filteredWorks = works.filter((work) => work.category.id === categoryId);
-  // filtrer les données "works" en fonction de l'id de catégorie
-
-  console.log(filteredWorks);
-  genererWorks(filteredWorks);
-  // les données filtrées sont affectées à la variable "filteredWorks"
+  fetch("http://localhost:5678/api/works")
+    .then((response) => response.json())
+    .then((data) => {
+      const filteredWorks = data.filter(
+        (work) => work.categoryId === categoryId
+        // filtrer les données "works" en fonction de l'id de catégorie
+        // les données filtrées sont affectées à la variable "filteredWorks"
+      );
+      console.log(filteredWorks);
+      genererWorks(filteredWorks);
+    })
+    .catch((error) => {
+      console.error("Erreur lors de la récupération des données :", error);
+    });
 }
 
 const boutonFiltrerObjects = document.getElementById("objects");
@@ -176,9 +182,10 @@ function genererWorksGallerie(data) {
       // this                    .parentElement                           . parentElement    .children
       const projectIndex = projectListItems.indexOf(this.parentElement);
       // dans la liste projectListItems, on récupére le numéro(index) d'emplacement dans la liste du projet à supprimer grâce à la méthode indexOf qui a comme argument l'élément "sectionImageEditee"
-      const project = data[projectIndex];
-      // on utilise cet index pour récupérer le projet de l'architecte correspondant dans le tableau data de l'api
+      const project = works[projectIndex];
+      // on utilise cet index pour récupérer le projet de l'architecte correspondant dans le tableau works de l'api
       console.log(project);
+      console.log(works);
       console.log(projectIndex);
       console.log(projectListItems);
       console.log(project.id);
@@ -271,7 +278,7 @@ inputImage.addEventListener("change", () => {
   // écouteur événement sur la lecture du fichier par new FileReader
   reader.addEventListener("load", () => {
     apperçuImage.src = reader.result;
-    // reader.result renvoie l'URL de données encodée en base64 qui permet de mettre ajour le src de aperçuImage
+    // reader.result renvoie l'URL de données encodée en base64 qui permet de mettre a jour le src de aperçuImage
     apperçuImage.style.display = "block";
     inputImage.style.display = "none";
     buttonImage.style.display = "none";
@@ -361,6 +368,7 @@ form.addEventListener("submit", async function (event) {
       genererWorks(works);
       genererWorksGallerie(works);
       console.log(works);
+      console.log(data);
       // on fait "disparaitre" la seconde modal et apparaitre la premiére
       modalSecond.style.display = "none";
       modalFirst.style.display = "block";
