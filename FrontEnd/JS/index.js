@@ -1,40 +1,49 @@
 // ----------------------------------- info user dans session storage
 const userInfos = JSON.parse(sessionStorage.getItem("user"));
-// lecture infos user depuis local storage sous forme objet Json
+// lecture infos user depuis local storage sous forme objet JS
 
 // ------------------------------------Appel FETCH de l'API---------------------
 
 let works = [];
 let token;
-try {
-  const res = await fetch("http://localhost:5678/api/works");
-  if (res.ok) {
-    const data = await res.json();
-    works = data;
-    // les données de la réponse sont affectées à la variable "works"
-    if (userInfos == null) {
-      // dans le cas où les userInfos n'est pas trouvé et qu'il n'y a pas eu de login réussi
-      genererWorks(works);
-      // fonction "genererWorks" est appelée avec "works" comme argument
+
+async function fetchWorks() {
+  try {
+    const res = await fetch("http://localhost:5678/api/works");
+    if (res.ok) {
+      const data = await res.json();
+      works = data;
+      // les données de la réponse sont affectées à la variable "works"
+      if (userInfos == null) {
+        // dans le cas où les userInfos n'est pas trouvé et qu'il n'y a pas eu de login réussi
+        genererWorks(works);
+        // fonction "genererWorks" est appelée avec "works" comme argument
+        document.getElementById("buttons").style.display = "flex";
+        document.getElementById("title-gallery").style.margin = 0;
+      } else {
+        // le token de l'user est présent et donc login réussi
+        token = userInfos.token;
+        // // Récupérer token depuis infos user de localStorage
+        genererWorks(works);
+        document.getElementById("logout-button").style.display = "flex";
+        document.getElementById("login-button").style.display = "none";
+        // pour avoir le bouton logout lorsqu'on est connecté
+        document.getElementById("admin-bar").style.display = "flex";
+        // pour que l'élément admin-bar s'affiche quand l'utilisateur est connecté
+        const elements = document.querySelectorAll(".bouton-modifier");
+        for (let i = 0; i < elements.length; i++) {
+          elements[i].style.display = "flex";
+        }
+      }
     } else {
-      // le token de l'user est présent et donc login réussi
-      token = userInfos.token;
-      // // Récupérer token depuis infos user de localStorage
-      console.log(userInfos);
-      genererWorks(works);
-      document.getElementById("logout-button").style.display = "flex";
-      document.getElementById("login-button").style.display = "none";
-      // pour avoir le bouton logout lorsqu'on est connecté
-      document.getElementById("admin-bar").style.display = "flex";
-      // pour que l'élément admin-bar s'affiche quand l'utilisateur est connecté
+      console.log("ERREUR");
+      // si réponse pas ok, message d'erreur dans la console
     }
-  } else {
-    console.log("ERREUR");
-    // si réponse pas ok, message d'erreur dans la console
+  } catch (error) {
+    console.error(error);
   }
-} catch (error) {
-  console.error(error);
 }
+fetchWorks();
 
 // ----------------------------Fonction qui génére l'HTML de la gallerie de maniére dynamique---------------------
 function genererWorks(data) {
@@ -60,7 +69,6 @@ function genererWorks(data) {
     workElement.appendChild(imageElement);
     workElement.appendChild(titleElement);
   }
-  console.log(data);
 }
 
 // ------------------------------Fonction pour filtrer la gallerie de maniére dynamique---------------------
@@ -74,7 +82,6 @@ function filterWorks(categoryId) {
         // filtrer les données "works" en fonction de l'id de catégorie
         // les données filtrées sont affectées à la variable "filteredWorks"
       );
-      console.log(filteredWorks);
       genererWorks(filteredWorks);
     })
     .catch((error) => {
@@ -83,8 +90,9 @@ function filterWorks(categoryId) {
 }
 
 const boutonFiltrerObjects = document.getElementById("objects");
-boutonFiltrerObjects.addEventListener("click", () => filterWorks(1));
-// appel de la fonction filterWorks via l'écoute de l'évenement au click sur bouton
+boutonFiltrerObjects.addEventListener("click", () => {
+  filterWorks(1);
+});
 
 const boutonFiltrerAppartments = document.getElementById("appartments");
 boutonFiltrerAppartments.addEventListener("click", () => filterWorks(2));
@@ -100,6 +108,19 @@ boutonTous.addEventListener("click", () => {
   genererWorks(works);
 });
 
+const buttons = document.querySelectorAll(".filter");
+// on récupére tous les boutons de filtre
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    buttons.forEach((button) => {
+      button.classList.remove("active");
+      // au clic sur un bouton on retire la class "active" pour tous
+    });
+    button.classList.add("active");
+    // et on ajoute cette class active sur le bouton cliqué
+  });
+});
+
 // -------------------------------------------LOGOUT-------------------------------
 const boutonLogout = document.getElementById("logout-button");
 boutonLogout.addEventListener("click", () => {
@@ -111,13 +132,12 @@ boutonLogout.addEventListener("click", () => {
 
 // -------------------------------------------MODALE FIRST -------------------------------
 const modalFirst = document.getElementById("modalFirst");
-const buttonEdition = document.getElementById("button-edition");
+const buttonEdition = document.getElementById("button-modifier-gallerie");
 const closeModalFirst = document.getElementById("close-modal-first");
 
 buttonEdition.addEventListener("click", () => {
   modalFirst.style.display = "block";
   genererWorksGallerie(works);
-  console.log(works);
 });
 // pour faire apparaitre la boite de dialogue à l'évenemnt du click sur bouton
 
@@ -178,51 +198,45 @@ function genererWorksGallerie(data) {
         this.parentElement.parentElement.children
       );
       // on récupère et convertit en un tableau JavaScript les enfants de gallerieEditées :
-      // iconModalSupp cliquée .sectionImageEditee de l'icon cliquée .gallerieEditee .TOUTES les sectionImageEditees
-      // this                    .parentElement                           . parentElement    .children
       const projectIndex = projectListItems.indexOf(this.parentElement);
       // dans la liste projectListItems, on récupére le numéro(index) d'emplacement dans la liste du projet à supprimer grâce à la méthode indexOf qui a comme argument l'élément "sectionImageEditee"
       const project = works[projectIndex];
       // on utilise cet index pour récupérer le projet de l'architecte correspondant dans le tableau works de l'api
-      console.log(project);
-      console.log(works);
-      console.log(projectIndex);
-      console.log(projectListItems);
-      console.log(project.id);
-      console.log(sessionStorage.getItem("user"));
 
-      // fenêtre qui demande confirmation pour suppression du projet.
-      if (window.confirm("Êtes-vous sûr de vouloir supprimer ce projet?")) {
-        try {
-          const response = await fetch(
-            `http://localhost:5678/api/works/${project.id}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
+      async function supprimerProjet() {
+        // fenêtre qui demande confirmation pour suppression du projet.
+        if (window.confirm("Êtes-vous sûr de vouloir supprimer ce projet?")) {
+          try {
+            const response = await fetch(
+              `http://localhost:5678/api/works/${project.id}`,
+              {
+                method: "DELETE",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+
+            if (response.ok) {
+              console.log("Projet supprimé avec succès");
+              // Supprimer le projet de la liste des projets
+              // retourne un nouveau tableau works sans l'élément correspondant à l'id de project. tableau stocké dans la variable works
+              // filtre tous les éléments du tableau works qui ont un id.work différent de l'id.projet
+              works = works.filter((work) => work.id !== project.id);
+              // Mettre à jour la page avec les nouvelles données
+              genererWorks(works);
+              genererWorksGallerie(works);
+            } else {
+              console.error("Echec de la suppression du projet sélectionné");
             }
-          );
-
-          if (response.ok) {
-            console.log("Projet supprimé avec succès");
-            // Supprimer le projet de la liste des projets
-            // retourne un nouveau tableau works sans l'élément correspondant à l'id de project. tableau stocké dans la variable works
-            // filtre tous les éléments du tableau works qui ont un id.work différent de l'id.projet
-            works = works.filter((work) => work.id !== project.id);
-            // Mettre à jour la page avec les nouvelles données
-            genererWorks(works);
-            genererWorksGallerie(works);
-            console.log(works);
-          } else {
-            console.error("Echec de la suppression du projet sélectionné");
+          } catch (error) {
+            console.error(error);
           }
-        } catch (error) {
-          console.error(error);
         }
       }
+      supprimerProjet();
     });
   }
 }
@@ -230,7 +244,7 @@ function genererWorksGallerie(data) {
 
 const modalSecond = document.getElementById("modalSecond");
 const buttonAjoutPhoto = document.getElementById("ajout-photo");
-const closeModalSecond = document.getElementById("close-modal-second");
+const closeModalSecond = document.querySelectorAll(".close-modal-second");
 
 // fonction pour vider le form et l'apperçu de l'imag est remplacé par l'input file
 function resetForm() {
@@ -246,12 +260,14 @@ buttonAjoutPhoto.addEventListener("click", () => {
   modalFirst.style.display = "none";
 });
 
-closeModalSecond.addEventListener("click", () => {
-  // pour fermer la boite de dialogue avec le bouton close
-  modalSecond.style.display = "none";
-  modalFirst.style.display = "block";
-  // Réinitialisation des valeurs du formulaire
-  resetForm();
+closeModalSecond.forEach((button) => {
+  button.addEventListener("click", () => {
+    // pour fermer la boite de dialogue avec le bouton close
+    modalSecond.style.display = "none";
+    modalFirst.style.display = "block";
+    // Réinitialisation des valeurs du formulaire
+    resetForm();
+  });
 });
 
 window.addEventListener("click", (event) => {
@@ -299,7 +315,6 @@ async function fetchCategories() {
     if (res.ok) {
       const data = await res.json();
       categories = data;
-      console.log(categories);
       // création de la liste déroulante :
       const formListDeroulante = document.getElementById("category");
       for (let i = 0; i < categories.length; i++) {
@@ -307,7 +322,6 @@ async function fetchCategories() {
         option.value = categories[i].id;
         option.text = categories[i].name;
         formListDeroulante.appendChild(option);
-        console.log(option);
       }
     } else {
       console.log("ERREUR");
@@ -345,38 +359,54 @@ form.addEventListener("submit", async function (event) {
   formData.append("category", category.value);
   // formData.append permet de récupérer plusieurs valeurs
 
-  // console log sous format tableau de l'objet FormData
-  console.log(Array.from(formData));
+  async function ajoutProjet() {
+    try {
+      const response = await fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
-  try {
-    const response = await fetch("http://localhost:5678/api/works", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
+      if (response.status === 201) {
+        console.log("Projet ajouté avec succès");
+        const data = await response.json();
+        // permet de récupérer les données renvoyées par le serveur
 
-    if (response.status === 201) {
-      console.log("Projet ajouté avec succès");
-      const data = await response.json();
-      // permet de récupérer les données renvoyées par le serveur sous forme de JSON.
-
-      // Ajouter le nouveau projet à la liste des projets(works)
-      works.push(data);
-      // Mettre à jour la page avec les nouvelles données
-      genererWorks(works);
-      genererWorksGallerie(works);
-      console.log(works);
-      console.log(data);
-      // on fait "disparaitre" la seconde modal et apparaitre la premiére
-      modalSecond.style.display = "none";
-      modalFirst.style.display = "block";
-      resetForm();
-    } else {
-      console.error("Echec de l'ajout du nouveau projet");
+        // Ajouter le nouveau projet à la liste des projets(works)
+        works.push(data);
+        // Mettre à jour la page avec les nouvelles données
+        genererWorks(works);
+        genererWorksGallerie(works);
+        // on fait "disparaitre" la seconde modal et apparaitre la premiére
+        modalSecond.style.display = "none";
+        modalFirst.style.display = "block";
+        resetForm();
+      } else {
+        console.error("Echec de l'ajout du nouveau projet");
+      }
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
   }
+  ajoutProjet();
 });
+
+// ------------------------------------changement couleur bouton de soumission----------------
+const envoiProjet = document.getElementById("envoi-projet");
+
+function checkInputs() {
+  const image = document.getElementById("image").files[0];
+  const title = document.getElementById("title").value;
+
+  if (image && title.length > 1) {
+    envoiProjet.classList.add("filled");
+    envoiProjet.classList.remove("button-submit");
+  } else {
+    envoiProjet.classList.remove("filled");
+    envoiProjet.classList.add("button-submit");
+  }
+}
+
+form.addEventListener("input", checkInputs);
