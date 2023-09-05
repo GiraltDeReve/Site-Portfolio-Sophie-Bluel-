@@ -57,4 +57,4 @@ N'hésitez pas à contribuer, signaler des problèmes ou suggérer des améliora
 
 Merci d'avoir visité le projet Portfolio de Sophie-Bluel !
 
-Ce projet a été réalisé avec passion par Céline Rouaire dans le cadre de la formation de Développeur Web sur OpenClassrooms.
+Ce projet a été réalisé par Céline Rouaire dans le cadre de la formation de Développeur Web sur OpenClassrooms.
